@@ -1,0 +1,83 @@
+
+Sub exo6()
+
+' Exercice 6 : les tirages avec affichage du gagnant final et stockage des resultats dans un tableau excel'
+
+Dim param_tirages As Integer
+Dim param_joueurs As String
+Dim t As Integer
+Dim j As Integer
+Dim de1 As Integer
+Dim de2 As Integer
+Dim total As Integer
+Dim maxi_tirage As Integer
+Dim maxi_joueur As Integer
+Dim victoires(50) As Integer '50 joueurs maximum
+Dim partie As Integer
+
+
+
+param_tirages = InputBox("Entrez un nombre de tirages")
+param_joueurs = InputBox("Entrez un nombre de joueurs")
+
+For t = 1 To param_tirages
+
+maxi_tirage = -1
+maxi_joueur = 0
+
+    For j = 1 To param_joueurs
+    
+    de1 = Int(6 * Rnd) + 1
+    de2 = Int(6 * Rnd) + 1
+    total = de1 + de2
+    
+    If total > maxi_tirage Then
+    
+    maxi_tirage = total
+    maxi_joueur = j
+    
+    End If
+
+    Next j
+    
+    MsgBox ("Tirage " + CStr(t) + ": Le gagnant est le joueur " + CStr(maxi_joueur) + " avec un total de " + CStr(total) & vbCrLf)
+    
+    victoires(maxi_joueur) = victoires(maxi_joueur) + 1
+    
+Next t
+
+top_victoires = 0
+top_joueur = 0
+
+For j = 1 To param_joueurs
+    
+    If victoires(j) > top_victoires Then
+    
+    top_victoires = victoires(j)
+    top_joueur = j
+    
+    End If
+    
+Next j
+
+    MsgBox ("Top joueur N°" + CStr(top_joueur) + " avec " + CStr(top_victoires) + " victoires ")
+   
+'On trouve le numéro de la prochaine partie
+
+partie = Application.WorksheetFunction.Max(Range("exo6!a:a")) + 1
+
+   
+'On insère le résultat
+   
+With Sheets("exo6").ListObjects("Tirages")
+    .ListRows.Add
+    .Range.Cells(.ListRows.Count + 1, 1) = partie
+    .Range.Cells(.ListRows.Count + 1, 2) = param_joueurs
+    .Range.Cells(.ListRows.Count + 1, 3) = param_tirages
+    .Range.Cells(.ListRows.Count + 1, 4) = top_joueur
+    .Range.Cells(.ListRows.Count + 1, 5) = top_victoires
+End With
+
+    
+
+End Sub
